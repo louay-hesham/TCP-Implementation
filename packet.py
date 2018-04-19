@@ -16,7 +16,7 @@ class Packet:
     length_encoded = self.int_to_bytes(self.length, 2)
     checksum_encoded = self.int_to_bytes(self.checksum, 2)
     seq_no_encoded = self.int_to_bytes(self.seq_no, 4)
-    return length_encoded + seq_no_encoded + checksum_encoded + self.data.encode()
+    return length_encoded + seq_no_encoded + checksum_encoded + self.data
 
   def int_to_bytes(self, n, size):
     return n.to_bytes(size, 'big')
