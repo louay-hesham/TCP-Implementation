@@ -7,7 +7,7 @@ class Packet:
     self.checksum = self.compute_checksum()
 
   def __str__(self):
-    return 'Packet #' + str(self.seq_no) + "\nData: " + self.data
+    return 'Packet #' + str(self.seq_no)
 
   def compute_checksum(self):
     return 0
