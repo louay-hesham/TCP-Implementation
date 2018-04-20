@@ -19,6 +19,7 @@ print('Connection established.')
 
 with open("server_files/shark.jpg", "rb") as file:
   window_size = config.window_size
+  timeout = config.timeout
   window_base = 0
   packet_num = 0
   timer_dict = {}
@@ -39,7 +40,7 @@ with open("server_files/shark.jpg", "rb") as file:
           print('Lost #' + str(packet_num))
         packet_dict[packet_num] = packet
         ack_dict[packet_num] = False
-        timer_dict[packet_num] = time.time() + 0.5      
+        timer_dict[packet_num] = time.time() + timeout      
         packet_num += 1
 
     try:
@@ -61,10 +62,10 @@ with open("server_files/shark.jpg", "rb") as file:
     except BlockingIOError:
       pass
 
-    for seq_no, timeout in timer_dict.items():
-      if timeout < time.time():
+    for seq_no, timestamp in timer_dict.items():
+      if timestamp < time.time():
         print('Timeout #' + str(seq_no))
         conn.sendall(packet_dict[seq_no].encode())
-        timer_dict[seq_no] = time.time() + 0.5
+        timer_dict[seq_no] = time.time() + timeout
 
   conn.close()

@@ -15,7 +15,7 @@ class Packet:
       split = int.from_bytes(self.data[i:i + 2], 'big')
       sum += split
       i += 1
-    return sum
+    return sum % pow(2,16)
 
   def encode(self):
     length_encoded = self.int_to_bytes(self.length, 2)
