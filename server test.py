@@ -1,5 +1,6 @@
 import socket
 from packet import Packet
+import time
 import config
 
 def check_acks(ack_dict):
@@ -20,7 +21,7 @@ with open("server_files/shark.jpg", "rb") as file:
   window_size = config.window_size
   window_base = 0
   packet_num = 0
-  # timer_dict = {}
+  timer_dict = {}
   packet_dict = {}
   ack_dict = {}
   while True:
@@ -31,12 +32,15 @@ with open("server_files/shark.jpg", "rb") as file:
           break # end of file
       else:
         packet = Packet(piece, packet_num)
-        conn.sendall(packet.encode())
-        print('Sent #' + str(packet_num))
+        if (config.decision(config.plp)):
+          conn.sendall(packet.encode())
+          print('Sent #' + str(packet_num))
+        else:
+          print('Lost #' + str(packet_num))
         packet_dict[packet_num] = packet
         ack_dict[packet_num] = False
-        # Start timer here
-        packet_num +=1
+        timer_dict[packet_num] = time.time() + 0.5      
+        packet_num += 1
 
     try:
       ack = conn.recv(6)
@@ -45,7 +49,7 @@ with open("server_files/shark.jpg", "rb") as file:
         checksum = int.from_bytes(ack[4:], 'big')
         print('Acknowledged #' + str(seq_no))
         ack_dict[seq_no] = True
-        # Stop timer
+        timer_dict.pop(seq_no)
         if seq_no == window_base:
           packet_dict.pop(seq_no)
           try:
@@ -53,10 +57,14 @@ with open("server_files/shark.jpg", "rb") as file:
               window_base += 1
               print("Window base = " + str(window_base))
           except KeyError:
-            continue
+            pass        
     except BlockingIOError:
-      continue
+      pass
 
-    # Check timer here
+    for seq_no, timeout in timer_dict.items():
+      if timeout < time.time():
+        print('Timeout #' + str(seq_no))
+        conn.sendall(packet_dict[seq_no].encode())
+        timer_dict[seq_no] = time.time() + 0.5
 
   conn.close()
