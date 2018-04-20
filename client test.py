@@ -1,12 +1,15 @@
 import socket
 from packet import Ack_Packet
+import config
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(('localhost', 50001))
-window_size = 5
+s.connect((config.TCP_IP, config.TCP_PORT))
+
+window_size = config.window_size
 window_base = 0
 file_data = bytes([])
 my_dict={}
+
 while 1:
   data = s.recv(520)
   if not data: break
