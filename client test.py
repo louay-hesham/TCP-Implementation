@@ -22,9 +22,10 @@ while 1:
   if seq_no >= window_base and seq_no < (window_base + window_size):
     print('Received #',seq_no)
     if config.decision(config.plp):
-      p = Ack_Packet(0, seq_no)
-      s.sendall(p.encode())
-      print('Acknowledged #', seq_no)
+      if checksum == config.checksum(string):
+        p = Ack_Packet(checksum , seq_no)
+        s.sendall(p.encode())
+        print('Acknowledged #', seq_no)
     else:
       print ('Ack lost #', seq_no)
       
@@ -38,7 +39,7 @@ while 1:
           file_data += my_dict[window_base]
           window_base += 1
   elif seq_no < window_base:
-    p = Ack_Packet(0, seq_no)
+    p = Ack_Packet(config.checksum(my_dict[seq_no]), seq_no)
     print('Received already acked #', seq_no)
     s.sendall(p.encode())
 
