@@ -1,10 +1,10 @@
 import random
 
 TCP_IP = 'localhost'
-TCP_PORT = 50001
-window_size = 5
-plp = 0.01
-pcp = 0.5
+TCP_PORT = 50000
+window_size = 10
+plp = 0.1
+pcp = 0.1
 timeout = 0.1
 
 def checksum(data):

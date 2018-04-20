@@ -21,23 +21,26 @@ while 1:
   string = data[8:]
   if seq_no >= window_base and seq_no < (window_base + window_size):
     print('Received #',seq_no)
-    if config.decision(config.plp):
-      if checksum == config.checksum(string):
+    if checksum == config.checksum(string):
+      if config.decision(config.plp):
         p = Ack_Packet(checksum , seq_no)
         s.sendall(p.encode())
         print('Acknowledged #', seq_no)
+      else:
+        print ('Ack lost #', seq_no)
+
+      my_dict[seq_no]= string
+      if seq_no==window_base:
+        while 1:
+          if my_dict.get(window_base)== None:
+            break
+          else:
+            print('window_base', window_base)
+            file_data += my_dict[window_base]
+            window_base += 1
     else:
-      print ('Ack lost #', seq_no)
+      print('#', seq_no, ' is corrupted!')
       
-    my_dict[seq_no]= string
-    if seq_no==window_base:
-      while 1:
-        if my_dict.get(window_base)== None:
-          break
-        else:
-          print('window_base', window_base)
-          file_data += my_dict[window_base]
-          window_base += 1
   elif seq_no < window_base:
     p = Ack_Packet(config.checksum(my_dict[seq_no]), seq_no)
     print('Received already acked #', seq_no)

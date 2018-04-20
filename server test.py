@@ -35,10 +35,11 @@ with open("server_files/shark.jpg", "rb") as file:
         packet = Packet(piece, packet_num)
         if (config.decision(config.plp)):
           if (config.decision(config.pcp)):
-            packet.data[0] << 1
-            print ('Corrupted #', packet_num)
-          conn.sendall(packet.encode())
-          print('Sent #', packet_num)
+            conn.sendall(packet.encode(False))
+            print ('Sent #', packet_num)
+          else:
+            conn.sendall(packet.encode(True))
+            print('Corrupted #', packet_num)
         else:
           print('Lost #', packet_num)
         packet_dict[packet_num] = packet
@@ -68,7 +69,7 @@ with open("server_files/shark.jpg", "rb") as file:
     for seq_no, timestamp in timer_dict.items():
       if timestamp < time.time():
         print('Timeout #', seq_no)
-        conn.sendall(packet_dict[seq_no].encode())
+        conn.sendall(packet_dict[seq_no].encode(False))
         timer_dict[seq_no] = time.time() + timeout
 
   conn.close()
