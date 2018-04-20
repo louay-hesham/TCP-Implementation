@@ -10,7 +10,12 @@ class Packet:
     return 'Packet #' + str(self.seq_no)
 
   def compute_checksum(self):
-    return 0
+    sum = 0
+    for i in range(len(self.data)):
+      split = int.from_bytes(self.data[i:i + 2], 'big')
+      sum += split
+      i += 1
+    return sum
 
   def encode(self):
     length_encoded = self.int_to_bytes(self.length, 2)

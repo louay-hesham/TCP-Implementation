@@ -1,6 +1,10 @@
 import socket
 from packet import Ack_Packet
 import config
+import random
+
+def decision(probability):
+    return random.random() < probability
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((config.TCP_IP, config.TCP_PORT))
@@ -19,18 +23,26 @@ while 1:
   checksum = int.from_bytes(data[6:8], 'big')
   string = data[8:]
   if seq_no>= window_base and seq_no<(window_base+window_size):
+
+
+    if decision(0.9):
+      p = Ack_Packet(0, seq_no)
+      print('sequence number',seq_no)
+      s.sendall(p.encode())
+      my_dict[seq_no]= string
+      if seq_no==window_base:
+        while 1:
+          if my_dict.get(window_base)== None:
+            break
+          else:
+            print('window_base', window_base)
+            file_data += my_dict[window_base]
+            window_base += 1
+  elif seq_no< window_base:
     p = Ack_Packet(0, seq_no)
-    print('sequence number',seq_no)
+    print('sequence number', seq_no)
     s.sendall(p.encode())
-    my_dict[seq_no]= string
-    if seq_no==window_base:
-      while 1:
-        if my_dict.get(window_base)== None:
-          break
-        else:
-          print('window_base', window_base)
-          file_data += my_dict[window_base]
-          window_base += 1
+
 
 
 with open("out-file.jpg", "wb") as out_file:
