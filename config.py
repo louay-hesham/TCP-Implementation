@@ -4,6 +4,7 @@ TCP_IP = 'localhost'
 TCP_PORT = 50001
 window_size = 5
 plp = 0.01
+pcp = 0.5
 timeout = 0.1
 
 def checksum(data):

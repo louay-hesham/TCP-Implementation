@@ -34,10 +34,13 @@ with open("server_files/shark.jpg", "rb") as file:
       else:
         packet = Packet(piece, packet_num)
         if (config.decision(config.plp)):
+          if (config.decision(config.pcp)):
+            packet.data[0] << 1
+            print ('Corrupted #', packet_num)
           conn.sendall(packet.encode())
-          print('Sent #' + str(packet_num))
+          print('Sent #', packet_num)
         else:
-          print('Lost #' + str(packet_num))
+          print('Lost #', packet_num)
         packet_dict[packet_num] = packet
         ack_dict[packet_num] = False
         timer_dict[packet_num] = time.time() + timeout      
@@ -56,7 +59,7 @@ with open("server_files/shark.jpg", "rb") as file:
           try:
             while ack_dict[window_base]:
               window_base += 1
-              print("Window base = " + str(window_base))
+              print("Window base = ", window_base)
           except KeyError:
             pass        
     except BlockingIOError:
@@ -64,7 +67,7 @@ with open("server_files/shark.jpg", "rb") as file:
 
     for seq_no, timestamp in timer_dict.items():
       if timestamp < time.time():
-        print('Timeout #' + str(seq_no))
+        print('Timeout #', seq_no)
         conn.sendall(packet_dict[seq_no].encode())
         timer_dict[seq_no] = time.time() + timeout
 
