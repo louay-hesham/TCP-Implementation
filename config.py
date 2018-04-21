@@ -1,7 +1,10 @@
 import random
 
+algorithms = ['SR', 'GBN', 'S&W']
+algorithm = algorithms[2]
+
 TCP_IP = 'localhost'
-TCP_PORT = 50000
+TCP_PORT = 5000
 window_size = 10
 plp = 0.1
 pcp = 0.1

@@ -6,7 +6,11 @@ import random
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((config.TCP_IP, config.TCP_PORT))
 
-window_size = config.window_size
+if config.algorithm == 'SR':
+  window_size = config.window_size
+else:
+  window_size = 1
+
 window_base = 0
 file_data = bytes([])
 my_dict={}
