@@ -58,7 +58,14 @@ while 1:
             window_base += 1
     else:
       print('#', seq_no, ' is corrupted!')
-      
+      if config.algorithm == 'GBN':
+        p = Ack_Packet(config.checksum(my_dict[prev_seq_num]), prev_seq_num)
+        print('GBN sending ACk #', prev_seq_num)
+        s.sendall(p.encode())
+
+
+
+
   elif seq_no < window_base:
     if config.algorithm == 'GBN':
       current_sq_num = prev_seq_num
