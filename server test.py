@@ -11,7 +11,19 @@ print(conn,addr)
 conn.setblocking(0)
 print('Connection established.')
 
-with open("server_files/shark.jpg", "rb") as file:
+while 1:
+  try:
+    data = conn.recv(512)
+    if data:
+      length = int.from_bytes(data[0:2], 'big')
+      seq_no = int.from_bytes(data[2:6], 'big')
+      checksum = int.from_bytes(data[6:8], 'big')
+      filename = data[8:].decode()
+      break
+  except (BlockingIOError, KeyError):
+      pass
+
+with open("server_files/" + filename, "rb") as file:
   if config.algorithm == 'SR':
     selective_repeat(conn, file)
   elif config.algorithm == 'S&W':
