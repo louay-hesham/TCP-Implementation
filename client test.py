@@ -4,7 +4,9 @@ import config
 import random
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind(config.Client_address)
 s.connect((config.TCP_IP, config.TCP_PORT))
+
 
 if config.algorithm == 'SR':
   window_size = config.window_size

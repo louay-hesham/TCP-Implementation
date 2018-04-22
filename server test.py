@@ -7,6 +7,7 @@ s.bind((config.TCP_IP, config.TCP_PORT))
 s.listen(1)
 
 conn, addr = s.accept()
+print(conn,addr)
 conn.setblocking(0)
 print('Connection established.')
 

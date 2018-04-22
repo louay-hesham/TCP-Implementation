@@ -4,7 +4,8 @@ algorithms = ['SR', 'GBN', 'S&W']
 algorithm = algorithms[2]
 
 TCP_IP = 'localhost'
-TCP_PORT = 5000
+TCP_PORT = 50001
+Client_address = ('', 10000)
 window_size = 10
 plp = 0.1
 pcp = 0.1
