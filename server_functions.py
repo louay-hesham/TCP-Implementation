@@ -107,34 +107,26 @@ def go_back_n(conn, file):
       if ack:
         seq_no = int.from_bytes(ack[0:4], 'big')
         checksum = int.from_bytes(ack[4:], 'big')
-        n = window_base
-        while n <= seq_no:
-          print('Acknowledged #' + str(n))
-          ack_dict[n] = True
-          timer_dict.pop(n)
-          if n == window_base:
-            packet_dict.pop(n)
-            try:
-              while ack_dict[window_base]:
-                window_base += 1
-                print("Window base = ", window_base)
-            except KeyError:
-              pass   
-          n += 1     
+        while window_base <= seq_no:
+          print('Acknowledged #' + str(window_base))
+          ack_dict[window_base] = True
+          timer_dict.pop(window_base)
+          packet_dict.pop(window_base)
+          window_base += 1
+          print("Window base = ", window_base)
     except (BlockingIOError, KeyError):
       pass
 
     for seq_no, timestamp in timer_dict.items():
       if timestamp < time.time():
-        print('Timeout #', seq_no)
-        packet_num = seq_no
-        i = packet_num
-        while i < window_base + window_size:
+        while seq_no < window_base + window_size:
           try:
-            timer_dict.pop(i)
+            conn.sendall(packet_dict[seq_no].encode(False))
+            print('Timeout #', seq_no)
+            timer_dict[seq_no] = time.time() + timeout      
           except KeyError:
             pass
-          i += 1
+          seq_no += 1
         break
 
   conn.close()  

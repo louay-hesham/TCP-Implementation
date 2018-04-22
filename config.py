@@ -4,11 +4,11 @@ algorithms = ['SR', 'GBN', 'S&W']
 algorithm = algorithms[1]
 
 TCP_IP = 'localhost'
-TCP_PORT = 50000
-Client_address = ('', 10000)
+TCP_PORT = 50001
+Client_address = ('', 10003)
 window_size = 10
-plp = 0.1
-pcp = 0.1
+plp = 0.2
+pcp = 0.2
 timeout = 0.1
 
 def checksum(data):

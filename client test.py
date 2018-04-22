@@ -39,11 +39,11 @@ while 1:
   if seq_no >= window_base and seq_no < (window_base + window_size):
     print('Received #',seq_no)
     if checksum == config.checksum(string):
+      prev_seq_num = seq_no
       if config.decision(config.plp):
         p = Ack_Packet(checksum , seq_no)
         s.sendall(p.encode())
         print('Acknowledged #', seq_no)
-        prev_seq_num = seq_no
       else:
         print ('Ack lost #', seq_no)
 
@@ -59,9 +59,12 @@ while 1:
     else:
       print('#', seq_no, ' is corrupted!')
       if config.algorithm == 'GBN':
-        p = Ack_Packet(config.checksum(my_dict[prev_seq_num]), prev_seq_num)
-        print('GBN sending ACk #', prev_seq_num)
-        s.sendall(p.encode())
+        try:
+          p = Ack_Packet(config.checksum(my_dict[prev_seq_num]), prev_seq_num)
+          print('GBN sending ACk #', prev_seq_num)
+          s.sendall(p.encode())
+        except:
+          pass
 
 
 
