@@ -10,6 +10,7 @@ import time
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.bind(config.Client_address)
 s.connect((config.TCP_IP, config.TCP_PORT))
+start = time.time()
 file = config.files[int(math.floor(random.random()*len(config.files)))]
 print('requesting', file)
 packet = Packet(file.encode(), 0)
@@ -91,4 +92,6 @@ os.makedirs(out_folder)
 with open(out_folder + "/" + file, "wb") as out_file:
   out_file.write(file_data)
 
+end = time.time()
 s.close()
+print('Time elapsed:', end - start)

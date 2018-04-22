@@ -9,6 +9,17 @@ def check_acks(ack_dict):
       return False
   return True
 
+def send_packet(packet, seq_no, conn):
+  if (config.decision(config.plp)):
+    if (config.decision(config.pcp)):
+      conn.sendall(packet.encode(False))
+      print ('Sent #', seq_no)
+    else:
+      conn.sendall(packet.encode(True))
+      print('Corrupted #', seq_no)
+  else:
+    print('Lost #', seq_no)
+
 def sr_sw(conn, file, window_size):
   timeout = config.timeout
   window_base = 0
@@ -24,15 +35,7 @@ def sr_sw(conn, file, window_size):
           break # end of file
       else:
         packet = Packet(piece, packet_num)
-        if (config.decision(config.plp)):
-          if (config.decision(config.pcp)):
-            conn.sendall(packet.encode(False))
-            print ('Sent #', packet_num)
-          else:
-            conn.sendall(packet.encode(True))
-            print('Corrupted #', packet_num)
-        else:
-          print('Lost #', packet_num)
+        send_packet(packet, packet_num, conn)
         packet_dict[packet_num] = packet
         ack_dict[packet_num] = False
         timer_dict[packet_num] = time.time() + timeout      
@@ -60,7 +63,7 @@ def sr_sw(conn, file, window_size):
     for seq_no, timestamp in timer_dict.items():
       if timestamp < time.time():
         print('Timeout #', seq_no)
-        conn.sendall(packet_dict[seq_no].encode(False))
+        send_packet(packet_dict[seq_no], seq_no, conn)
         timer_dict[seq_no] = time.time() + timeout
 
   conn.close()
@@ -88,15 +91,7 @@ def go_back_n(conn, file):
           break # end of file
       else:
         packet = Packet(piece, packet_num)
-        if (config.decision(config.plp)):
-          if (config.decision(config.pcp)):
-            conn.sendall(packet.encode(False))
-            print ('Sent #', packet_num)
-          else:
-            conn.sendall(packet.encode(True))
-            print('Corrupted #', packet_num)
-        else:
-          print('Lost #', packet_num)
+        send_packet(packet, packet_num, conn)
         packet_dict[packet_num] = packet
         ack_dict[packet_num] = False
         timer_dict[packet_num] = time.time() + timeout      
@@ -121,8 +116,8 @@ def go_back_n(conn, file):
       if timestamp < time.time():
         while seq_no < window_base + window_size:
           try:
-            conn.sendall(packet_dict[seq_no].encode(False))
             print('Timeout #', seq_no)
+            send_packet(packet_dict[seq_no], seq_no, conn)
             timer_dict[seq_no] = time.time() + timeout      
           except KeyError:
             pass
