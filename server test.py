@@ -23,6 +23,7 @@ while 1:
   except (BlockingIOError, KeyError):
       pass
 
+print('Request received of', filename)
 with open("server_files/" + filename, "rb") as file:
   if config.algorithm == 'SR':
     selective_repeat(conn, file)

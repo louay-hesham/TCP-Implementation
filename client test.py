@@ -8,10 +8,9 @@ import math
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(config.Client_address)
 s.connect((config.TCP_IP, config.TCP_PORT))
-files = ['shark.jpg','Mewtwo.jpg']
-file = files[int(math.floor(random.random()*2))]
-
-packet = Packet(file, -1)
+file = config.files[int(math.floor(random.random()*len(config.files)))]
+print('requesting', file)
+packet = Packet(file.encode(), 0)
 s.sendall(packet.encode())
 
 if config.algorithm == 'SR':
@@ -85,7 +84,7 @@ while 1:
     s.sendall(p.encode())
 
 
-with open("out-file.jpg", "wb") as out_file:
+with open("out-"+file, "wb") as out_file:
   out_file.write(file_data)
 
 s.close()

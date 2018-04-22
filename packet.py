@@ -17,7 +17,7 @@ class Packet:
       i += 1
     return sum % pow(2,16)
 
-  def encode(self, corrupt):
+  def encode(self, corrupt=False):
     length_encoded = self.int_to_bytes(self.length, 2)
     checksum_encoded = self.int_to_bytes(self.checksum, 2)
     seq_no_encoded = self.int_to_bytes(self.seq_no, 4)
