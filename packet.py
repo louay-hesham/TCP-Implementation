@@ -10,18 +10,21 @@ class Packet:
     return 'Packet #' + str(self.seq_no)
 
   def compute_checksum(self):
-    sum = 0
+    s = 0
     for i in range(len(self.data)):
-      split = int.from_bytes(self.data[i:i + 2], 'big')
-      sum += split
+      w = int.from_bytes(self.data[i:i + 2], 'big')
+      s = s + w
+      s = (s>>16) + (s & 0xffff);
+      s = s + (s>>16);
       i += 1
-    return sum % pow(2,16)
-
+    s = ~s & 0xffff
+    return s
+  
   def encode(self, corrupt=False):
     length_encoded = self.int_to_bytes(self.length, 2)
     checksum_encoded = self.int_to_bytes(self.checksum, 2)
     seq_no_encoded = self.int_to_bytes(self.seq_no, 4)
-    data = "".encode() if corrupt else self.data
+    data = (self.int_to_bytes(self.data[0] >> 1, 1) + self.data[1:]) if corrupt else self.data
     return length_encoded + seq_no_encoded + checksum_encoded + data
 
   def int_to_bytes(self, n, size):
