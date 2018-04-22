@@ -4,9 +4,11 @@ from packet import Packet
 import config
 import random
 import math
+import os
+import time
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(config.Client_address)
+#s.bind(config.Client_address)
 s.connect((config.TCP_IP, config.TCP_PORT))
 file = config.files[int(math.floor(random.random()*len(config.files)))]
 print('requesting', file)
@@ -84,7 +86,9 @@ while 1:
     s.sendall(p.encode())
 
 
-with open("out-"+file, "wb") as out_file:
+out_folder = str(int(time.time()))
+os.makedirs(out_folder)
+with open(out_folder + "/" + file, "wb") as out_file:
   out_file.write(file_data)
 
 s.close()
