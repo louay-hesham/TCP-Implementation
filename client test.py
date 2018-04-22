@@ -1,12 +1,18 @@
 import socket
 from packet import Ack_Packet
+from packet import Packet
 import config
 import random
+import math
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(config.Client_address)
 s.connect((config.TCP_IP, config.TCP_PORT))
+files = ['shark.jpg','Mewtwo.jpg']
+file = files[int(math.floor(random.random()*2))]
 
+packet = Packet(file, -1)
+s.sendall(packet.encode())
 
 if config.algorithm == 'SR':
   window_size = config.window_size
