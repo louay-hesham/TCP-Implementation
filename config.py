@@ -1,7 +1,7 @@
 import random
 
 algorithms = ['SR', 'GBN', 'S&W']
-algorithm = algorithms[2]
+algorithm = algorithms[1]
 
 TCP_IP = 'localhost'
 TCP_PORT = 50001

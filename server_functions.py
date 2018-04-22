@@ -75,6 +75,7 @@ def stop_and_wait(conn, file):
 def go_back_n(conn, file):
   timeout = config.timeout
   window_base = 0
+  window_size = config.window_size
   packet_num = 0
   timer_dict = {}
   packet_dict = {}
@@ -107,7 +108,7 @@ def go_back_n(conn, file):
         seq_no = int.from_bytes(ack[0:4], 'big')
         checksum = int.from_bytes(ack[4:], 'big')
         n = window_base
-        while n <= seq_no
+        while n <= seq_no:
           print('Acknowledged #' + str(n))
           ack_dict[n] = True
           timer_dict.pop(n)
@@ -120,7 +121,7 @@ def go_back_n(conn, file):
             except KeyError:
               pass   
           n += 1     
-    except BlockingIOError, KeyError:
+    except (BlockingIOError, KeyError):
       pass
 
     for seq_no, timestamp in timer_dict.items():
@@ -128,8 +129,11 @@ def go_back_n(conn, file):
         print('Timeout #', seq_no)
         packet_num = seq_no
         i = packet_num
-        while i < window_base + window_size
-          timer_dict.pop(i)
+        while i < window_base + window_size:
+          try:
+            timer_dict.pop(i)
+          except KeyError:
+            pass
           i += 1
         break
 
