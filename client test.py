@@ -60,9 +60,14 @@ while 1:
       print('#', seq_no, ' is corrupted!')
       
   elif seq_no < window_base:
-    p = Ack_Packet(config.checksum(my_dict[prev_seq_num]),  prev_seq_num)
-    print('Received already acked #', prev_seq_num)
+    if config.algorithm == 'GBN':
+      current_sq_num = prev_seq_num
+    else:
+      current_sq_num = seq_no
+    p = Ack_Packet(config.checksum(my_dict[current_sq_num ]), current_sq_num )
+    print('Received already acked #', current_sq_num)
     s.sendall(p.encode())
+
 
 with open("out-file.jpg", "wb") as out_file:
   out_file.write(file_data)
