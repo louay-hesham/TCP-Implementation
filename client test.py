@@ -16,6 +16,16 @@ else:
 window_base = 0
 file_data = bytes([])
 my_dict={}
+prev_seq_num = -1
+# previous sequence number =-1;
+# if  previous sequence number+1 = sequence number
+#     check for error or anythong
+#     if there is send previous Ack and break
+#     if not send Ack of current and change  previous to current
+#     only here we check window size
+#else
+#     ignore packt and send previous Ack
+
 
 while 1:
   data = s.recv(520)
@@ -25,6 +35,7 @@ while 1:
   seq_no = int.from_bytes(data[2:6], 'big')
   checksum = int.from_bytes(data[6:8], 'big')
   string = data[8:]
+
   if seq_no >= window_base and seq_no < (window_base + window_size):
     print('Received #',seq_no)
     if checksum == config.checksum(string):
@@ -32,6 +43,7 @@ while 1:
         p = Ack_Packet(checksum , seq_no)
         s.sendall(p.encode())
         print('Acknowledged #', seq_no)
+        prev_seq_num = seq_no
       else:
         print ('Ack lost #', seq_no)
 
@@ -48,8 +60,8 @@ while 1:
       print('#', seq_no, ' is corrupted!')
       
   elif seq_no < window_base:
-    p = Ack_Packet(config.checksum(my_dict[seq_no]), seq_no)
-    print('Received already acked #', seq_no)
+    p = Ack_Packet(config.checksum(my_dict[prev_seq_num]),  prev_seq_num)
+    print('Received already acked #', prev_seq_num)
     s.sendall(p.encode())
 
 with open("out-file.jpg", "wb") as out_file:
