@@ -16,3 +16,5 @@ with open("server_files/shark.jpg", "rb") as file:
     selective_repeat(conn, file)
   elif config.algorithm == 'S&W':
     stop_and_wait(conn, file)
+  elif config.algorithm == 'GBN':
+    go_back_n(conn, file)

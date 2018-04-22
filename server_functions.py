@@ -71,3 +71,66 @@ def selective_repeat(conn, file):
 
 def stop_and_wait(conn, file):
   sr_sw(conn, file, 1)
+
+def go_back_n(conn, file):
+  timeout = config.timeout
+  window_base = 0
+  packet_num = 0
+  timer_dict = {}
+  packet_dict = {}
+  ack_dict = {}
+  while True:
+    if packet_num >= window_base and packet_num < window_base + window_size:
+      piece = file.read(512)
+      if piece == "".encode():
+        if check_acks(ack_dict):
+          break # end of file
+      else:
+        packet = Packet(piece, packet_num)
+        if (config.decision(config.plp)):
+          if (config.decision(config.pcp)):
+            conn.sendall(packet.encode(False))
+            print ('Sent #', packet_num)
+          else:
+            conn.sendall(packet.encode(True))
+            print('Corrupted #', packet_num)
+        else:
+          print('Lost #', packet_num)
+        packet_dict[packet_num] = packet
+        ack_dict[packet_num] = False
+        timer_dict[packet_num] = time.time() + timeout      
+        packet_num += 1
+
+    try:
+      ack = conn.recv(6)
+      if ack:
+        seq_no = int.from_bytes(ack[0:4], 'big')
+        checksum = int.from_bytes(ack[4:], 'big')
+        n = window_base
+        while n <= seq_no
+          print('Acknowledged #' + str(n))
+          ack_dict[n] = True
+          timer_dict.pop(n)
+          if n == window_base:
+            packet_dict.pop(n)
+            try:
+              while ack_dict[window_base]:
+                window_base += 1
+                print("Window base = ", window_base)
+            except KeyError:
+              pass   
+          n += 1     
+    except BlockingIOError, KeyError:
+      pass
+
+    for seq_no, timestamp in timer_dict.items():
+      if timestamp < time.time():
+        print('Timeout #', seq_no)
+        packet_num = seq_no
+        i = packet_num
+        while i < window_base + window_size
+          timer_dict.pop(i)
+          i += 1
+        break
+
+  conn.close()  
