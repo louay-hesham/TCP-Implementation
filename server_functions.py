@@ -10,16 +10,19 @@ def check_acks(ack_dict):
   return True
 
 def send_packet(packet, seq_no, conn):
-  if (config.decision(config.plp)):
-    if (config.decision(config.pcp)):
-      conn.sendall(packet.encode(False))
-      print ('Sent #', seq_no)
+  try:
+    if (config.decision(config.plp)):
+      if (config.decision(config.pcp)):
+        conn.sendall(packet.encode(False))
+        print ('Sent #', seq_no)
+      else:
+        conn.sendall(packet.encode(True))
+        print('Corrupted #', seq_no)
     else:
-      conn.sendall(packet.encode(True))
-      print('Corrupted #', seq_no)
-  else:
+      print('Lost #', seq_no)
+  except:
     print('Lost #', seq_no)
-
+    
 def sr_sw(conn, file, window_size):
   timeout = config.timeout
   window_base = 0
@@ -57,7 +60,7 @@ def sr_sw(conn, file, window_size):
               print("Window base = ", window_base)
           except KeyError:
             pass        
-    except BlockingIOError:
+    except (BlockingIOError, KeyError):
       pass
 
     for seq_no, timestamp in timer_dict.items():

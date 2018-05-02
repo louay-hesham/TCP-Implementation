@@ -25,15 +25,6 @@ window_base = 0
 file_data = bytes([])
 my_dict={}
 prev_seq_num = -1
-# previous sequence number =-1;
-# if  previous sequence number+1 = sequence number
-#     check for error or anythong
-#     if there is send previous Ack and break
-#     if not send Ack of current and change  previous to current
-#     only here we check window size
-#else
-#     ignore packt and send previous Ack
-
 
 while 1:
   data = s.recv(520)
@@ -87,11 +78,17 @@ while 1:
     s.sendall(p.encode())
 
 
-out_folder = str(int(time.time()))
+out_folder = 'Client_instances/' + str(int(time.time()))
 os.makedirs(out_folder)
+print('Received file:', file)
+size = len(file_data);
+print('File size =', size)
 with open(out_folder + "/" + file, "wb") as out_file:
   out_file.write(file_data)
 
 end = time.time()
 s.close()
-print('Time elapsed:', end - start)
+time = end - start
+print('Time elapsed:', time)
+throughput = size / time
+print('Throughput =', throughput, 'bytes/second')
