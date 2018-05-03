@@ -44,7 +44,6 @@ def start_server(config_str):
   try:
     config_dict = json.loads(config_str)
     config_obj = type('Dummy', (object,), config_dict)
-    print(config_obj)
     server(config_obj)
   except Exception as e:
     print(e)

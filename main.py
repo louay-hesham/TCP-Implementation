@@ -4,11 +4,15 @@ import platform
 from subprocess import Popen
 import config
 
-def randomFunction():
-  return "import server, sys; server.start_server(sys.argv[1]);"
+server_command = "import server, sys; server.start_server(sys.argv[1]);"
 
-msg = config.to_str()
-new_window_command = "x-terminal-emulator -e".split()
-echo = [sys.executable, "-c",randomFunction()]
-process = Popen(new_window_command + echo + [msg])
-process.wait()
+def start_new_process(command_str):
+  msg = config.to_str()
+  new_window_command = "x-terminal-emulator -e".split()
+  echo = [sys.executable, "-c", command_str]
+  process = Popen(new_window_command + echo + [msg])
+  return process
+
+def start_server():
+  return start_new_process(server_command)
+  

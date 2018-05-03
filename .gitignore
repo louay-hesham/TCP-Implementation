@@ -1,3 +1,6 @@
 .idea/
 __pycache__/
 Client_instances/
+config.pyc
+packet.pyc
+server_functions.pyc
