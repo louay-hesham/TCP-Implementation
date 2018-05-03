@@ -1,14 +1,18 @@
-import socket
+import socket, random, math, os, time, json, sys
+import traceback
 from server_functions import *
-import sys
 from _thread import *
-import json
-import time
 
 def start_server(config_str):
-  config_dict = json.loads(config_str)
-  config_obj = type('Dummy', (object,), config_dict)
-  server(config_obj)
+  try:
+    config_dict = json.loads(config_str)
+    config_obj = type('Dummy', (object,), config_dict)
+    server(config_obj)
+  except Exception as e:
+    print(e)
+    print(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+    print(traceback.format_exc())
+    input('')
 
 def server(config):
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -39,8 +43,8 @@ def client_thread(conn, addr, config):
   print('Request received of', filename)
   with open("server_files/" + filename, "rb") as file:
     if config.algorithm == 'SR':
-      selective_repeat(conn, file)
+      selective_repeat(conn, file, config)
     elif config.algorithm == 'S&W':
-      stop_and_wait(conn, file)
+      stop_and_wait(conn, file, config)
     elif config.algorithm == 'GBN':
-      go_back_n(conn, file)
+      go_back_n(conn, file, config)

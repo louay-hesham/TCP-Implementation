@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import sys
-import platform
-from subprocess import Popen
+import sys, platform, time
 import config
+from subprocess import Popen
+from _thread import *
+import client
 
 server_command = "import server, sys; server.start_server(sys.argv[1]);"
 client_command = "import client, sys; client.start_client(sys.argv[1]);"
@@ -19,4 +20,15 @@ def start_server():
 
 def start_client():
   return start_new_process(client_command)
+
+# def start_thread(func):
+#   return pool.apply_async(func,(config))
+
+def generate_statistics():
+  start_new_thread(start_server,())
+  time.sleep(2)
+  c = client.client(config)
+  for t in [s, c]:
+    print(t)
+  print('done')
   
