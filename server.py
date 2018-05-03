@@ -5,6 +5,11 @@ from _thread import *
 import json
 import time
 
+def start_server(config_str):
+  config_dict = json.loads(config_str)
+  config_obj = type('Dummy', (object,), config_dict)
+  server(config_obj)
+
 def server(config):
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.bind((config.TCP_IP, config.TCP_PORT))
@@ -39,12 +44,3 @@ def client_thread(conn, addr, config):
       stop_and_wait(conn, file)
     elif config.algorithm == 'GBN':
       go_back_n(conn, file)
-
-def start_server(config_str):
-  try:
-    config_dict = json.loads(config_str)
-    config_obj = type('Dummy', (object,), config_dict)
-    server(config_obj)
-  except Exception as e:
-    print(e)
-    input('of a7')

@@ -2,6 +2,7 @@ import config
 import time
 
 from packet import Packet
+from common_functions import *
 
 def check_acks(ack_dict):
   for seq_no, ack in ack_dict.items():
@@ -11,8 +12,8 @@ def check_acks(ack_dict):
 
 def send_packet(packet, seq_no, conn):
   try:
-    if (config.decision(config.plp)):
-      if (config.decision(config.pcp)):
+    if (decision(config.plp)):
+      if (decision(config.pcp)):
         conn.sendall(packet.encode(False))
         print ('Sent #', seq_no)
       else:

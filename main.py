@@ -5,6 +5,7 @@ from subprocess import Popen
 import config
 
 server_command = "import server, sys; server.start_server(sys.argv[1]);"
+client_command = "import client, sys; client.start_client(sys.argv[1]);"
 
 def start_new_process(command_str):
   msg = config.to_str()
@@ -15,4 +16,7 @@ def start_new_process(command_str):
 
 def start_server():
   return start_new_process(server_command)
+
+def start_client():
+  return start_new_process(client_command)
   

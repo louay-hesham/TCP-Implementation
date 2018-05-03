@@ -1,4 +1,3 @@
-import random
 import json
 
 algorithms = ['SR', 'GBN', 'S&W']
@@ -28,24 +27,10 @@ plp = 0.01
 pcp = 0.01
 timeout = 0.1
 
-def checksum(data):
-  s = 0
-  for i in range(len(data)):
-    w = int.from_bytes(data[i:i + 2], 'big')
-    s = s + w
-    s = (s>>16) + (s & 0xffff);
-    s = s + (s>>16);
-    i += 1
-  s = ~s & 0xffff
-  return s
-
-def decision(p):
-  return random.random() < 1 - p
-
 def to_str():
   return json.dumps({
     'algorithm': algorithm,
-    'file': files,
+    'files': files,
     'TCP_IP': TCP_IP,
     'TCP_PORT': TCP_PORT,
     'window_size': window_size,
