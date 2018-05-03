@@ -7,6 +7,7 @@ import client
 
 server_command = "import server, sys; server.start_server(sys.argv[1]);"
 client_command = "import client, sys; client.start_client(sys.argv[1]);"
+stats = {}
 
 def start_new_process(command_str):
   msg = config.to_str()
@@ -38,7 +39,6 @@ def generate_statistics():
   probabilities = [0.01, 0.05, 0.1, 0.3]
   window_sizes = [1, 10, 100, 500, 1000]
   config.TCP_PORT = 50000
-  stats = {}
   print('Testing Stop-and-Wait algorithm')
   config.algorithm = 'S&W'
   stats['S&W'] = {}
