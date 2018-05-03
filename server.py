@@ -1,10 +1,20 @@
 import socket
-import config
 from server_functions import *
 import sys
 from _thread import *
+import json
+import time
 
-def client_thread(conn, addr):
+def server(config):
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.bind((config.TCP_IP, config.TCP_PORT))
+  s.listen(1)
+
+  while 1:
+    conn, addr = s.accept()
+    start_new_thread(client_thread, (conn, addr, config))
+
+def client_thread(conn, addr, config):
   print(conn, addr)
   conn.setblocking(0)
   print('Connection established.')
@@ -30,11 +40,12 @@ def client_thread(conn, addr):
     elif config.algorithm == 'GBN':
       go_back_n(conn, file)
 
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((config.TCP_IP, config.TCP_PORT))
-s.listen(1)
-
-while 1:
-  conn, addr = s.accept()
-  start_new_thread(client_thread, (conn, addr))
+def start_server(config_str):
+  try:
+    config_dict = json.loads(config_str)
+    config_obj = type('Dummy', (object,), config_dict)
+    print(config_obj)
+    server(config_obj)
+  except Exception as e:
+    print(e)
+    input('of a7')

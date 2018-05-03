@@ -1,4 +1,4 @@
-def start_client(config):
+def start(config):
   import socket
   from packet import Ack_Packet
   from packet import Packet

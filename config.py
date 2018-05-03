@@ -1,4 +1,5 @@
 import random
+import json
 
 algorithms = ['SR', 'GBN', 'S&W']
 algorithm = algorithms[0]
@@ -20,7 +21,7 @@ files = [
 ]
 
 TCP_IP = 'localhost'
-TCP_PORT = 50000
+TCP_PORT = 50001
 #Client_address = ('',)
 window_size = 100
 plp = 0.01
@@ -40,3 +41,15 @@ def checksum(data):
 
 def decision(p):
   return random.random() < 1 - p
+
+def to_str():
+  return json.dumps({
+    'algorithm': algorithm,
+    'file': files,
+    'TCP_IP': TCP_IP,
+    'TCP_PORT': TCP_PORT,
+    'window_size': window_size,
+    'plp': plp,
+    'pcp': pcp,
+    'timeout': timeout
+  })
