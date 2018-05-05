@@ -20,8 +20,8 @@ def send_packet(packet, seq_no, conn):
         print('Corrupted #', seq_no)
     else:
       print('Lost #', seq_no)
-  except:
-    print('Lost #', seq_no)
+  except Exception as e :
+    print(e)
     
 def sr_sw(conn, file, window_size):
   timeout = config.timeout
