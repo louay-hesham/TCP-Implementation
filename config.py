@@ -20,12 +20,12 @@ files = [
 ]
 
 TCP_IP = 'localhost'
-TCP_PORT = 50001
+TCP_PORT = 20000
 #Client_address = ('',)
 window_size = 100
 plp = 0
 pcp = 0
-timeout = 0.1
+timeout = 0.2
 
 def checksum(data):
   s = 0

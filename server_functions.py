@@ -66,9 +66,12 @@ def sr_sw(conn, file, window_size):
     for seq_no, timestamp in timer_dict.items():
       if timestamp < time.time():
         print('Timeout #', seq_no)
-        send_packet(packet_dict[seq_no], seq_no, conn)
+        conn.sendall(packet.encode(False))
+        print ('Sent #', seq_no)
+        # send_packet(packet_dict[seq_no], seq_no, conn)
         timer_dict[seq_no] = time.time() + timeout
 
+  print('Sent file on', conn)
   conn.close()
 
 def selective_repeat(conn, file):
@@ -127,4 +130,5 @@ def go_back_n(conn, file):
           seq_no += 1
         break
 
+  print('Sent file on', conn)
   conn.close()  

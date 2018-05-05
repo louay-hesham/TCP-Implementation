@@ -8,8 +8,14 @@ import os
 import time
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#s.bind(config.Client_address)
 s.connect((config.TCP_IP, config.TCP_PORT))
+data = s.recv(520)
+print(data)
+conn_port = int.from_bytes(data[8:], 'big')
+print(conn_port)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((config.TCP_IP, conn_port))
+
 start = time.time()
 file = config.files[int(math.floor(random.random()*len(config.files)))]
 print('requesting', file)
