@@ -19,8 +19,9 @@ files = [
   # 'wp-image-142649597.jpg'
 ]
 
+data_size = 2048
 TCP_IP = 'localhost'
-TCP_PORT = 50001
+TCP_PORT = 35000
 window_size = 10
 plp = 0
 pcp = 0
@@ -35,5 +36,6 @@ def to_str():
     'window_size': window_size,
     'plp': plp,
     'pcp': pcp,
-    'timeout': timeout
+    'timeout': timeout,
+    'data_size': data_size
   })

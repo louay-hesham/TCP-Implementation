@@ -31,7 +31,7 @@ def sr_sw(conn, file, window_size, config):
   ack_dict = {}
   while True:
     if packet_num >= window_base and packet_num < window_base + window_size:
-      piece = file.read(256)
+      piece = file.read(config.data_size)
       if piece == "".encode():
         if check_acks(ack_dict):
           break # end of file
@@ -88,7 +88,7 @@ def go_back_n(conn, file, config):
   ack_dict = {}
   while True:
     if packet_num >= window_base and packet_num < window_base + window_size:
-      piece = file.read(256)
+      piece = file.read(config.data_size)
       if piece == "".encode():
         if check_acks(ack_dict):
           break # end of file

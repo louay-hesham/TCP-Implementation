@@ -19,7 +19,7 @@ def client(config):
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.connect((config.TCP_IP, config.TCP_PORT))
-  data = s.recv(264)
+  data = s.recv(config.data_size + 8)
   print(data)
   conn_port = int.from_bytes(data[8:], 'big')
   print(conn_port)
@@ -43,7 +43,7 @@ def client(config):
   prev_seq_num = -1
 
   while 1:
-    data = s.recv(264)
+    data = s.recv(config.data_size + 8)
     if not data: break
     # print('Received bytes: ', data)
     length = int.from_bytes(data[0:2], 'big')

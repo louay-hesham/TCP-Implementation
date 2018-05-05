@@ -39,7 +39,7 @@ def client_thread(conn, addr, config):
 
   while 1:
     try:
-      data = conn.recv(512)
+      data = conn.recv(config.data_size + 8)
       if data:
         length = int.from_bytes(data[0:2], 'big')
         seq_no = int.from_bytes(data[2:6], 'big')
