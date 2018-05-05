@@ -18,8 +18,14 @@ def client(config):
   import time 
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  #s.bind(config.Client_address)
   s.connect((config.TCP_IP, config.TCP_PORT))
+  data = s.recv(264)
+  print(data)
+  conn_port = int.from_bytes(data[8:], 'big')
+  print(conn_port)
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((config.TCP_IP, conn_port))
+
   start = time.time()
   file = config.files[int(math.floor(random.random()*len(config.files)))]
   print('requesting', file)
@@ -37,7 +43,7 @@ def client(config):
   prev_seq_num = -1
 
   while 1:
-    data = s.recv(520)
+    data = s.recv(264)
     if not data: break
     # print('Received bytes: ', data)
     length = int.from_bytes(data[0:2], 'big')
@@ -102,4 +108,5 @@ def client(config):
   print('Time elapsed:', time)
   throughput = size / time
   print('Throughput =', throughput, 'bytes/second')
+  input('Press enter to close..')
   return throughput

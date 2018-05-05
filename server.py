@@ -18,10 +18,19 @@ def server(config):
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.bind((config.TCP_IP, config.TCP_PORT))
   s.listen(1)
-
+  port_offset = 1
   while 1:
     conn, addr = s.accept()
-    start_new_thread(client_thread, (conn, addr, config))
+    new_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    new_port = config.TCP_PORT + port_offset
+    new_socket.bind((config.TCP_IP, new_port))
+    new_socket.listen(1)
+    connection_packet = Packet(new_port.to_bytes(4, 'big'), 0)
+    port_offset += 1
+    conn.sendall(connection_packet.encode())
+    conn2, addr2 = new_socket.accept()
+
+    start_new_thread(client_thread, (conn2, addr2, config))
 
 def client_thread(conn, addr, config):
   print(conn, addr)

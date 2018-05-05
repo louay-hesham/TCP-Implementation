@@ -12,15 +12,15 @@ def send_packet(packet, seq_no, conn, config):
   try:
     if (decision(config.plp)):
       if (decision(config.pcp)):
-        conn.sendall(packet.encode(False))
+        conn.sendall(packet.encode())
         print ('Sent #', seq_no)
       else:
         conn.sendall(packet.encode(True))
         print('Corrupted #', seq_no)
     else:
       print('Lost #', seq_no)
-  except:
-    print('Lost #', seq_no)
+  except Exception as e:
+    print(e)    
     
 def sr_sw(conn, file, window_size, config):
   timeout = config.timeout
@@ -31,7 +31,7 @@ def sr_sw(conn, file, window_size, config):
   ack_dict = {}
   while True:
     if packet_num >= window_base and packet_num < window_base + window_size:
-      piece = file.read(512)
+      piece = file.read(256)
       if piece == "".encode():
         if check_acks(ack_dict):
           break # end of file
@@ -68,6 +68,7 @@ def sr_sw(conn, file, window_size, config):
         send_packet(packet_dict[seq_no], seq_no, conn, config)
         timer_dict[seq_no] = time.time() + timeout
 
+  print(conn)
   conn.close()
 
 def selective_repeat(conn, file, config):
@@ -87,7 +88,7 @@ def go_back_n(conn, file, config):
   ack_dict = {}
   while True:
     if packet_num >= window_base and packet_num < window_base + window_size:
-      piece = file.read(512)
+      piece = file.read(256)
       if piece == "".encode():
         if check_acks(ack_dict):
           break # end of file
@@ -126,4 +127,5 @@ def go_back_n(conn, file, config):
           seq_no += 1
         break
 
+  print(conn)
   conn.close()  
