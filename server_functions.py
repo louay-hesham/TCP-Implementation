@@ -1,7 +1,6 @@
-import config
 import time
-
 from packet import Packet
+from common_functions import *
 
 def check_acks(ack_dict):
   for seq_no, ack in ack_dict.items():
@@ -9,11 +8,11 @@ def check_acks(ack_dict):
       return False
   return True
 
-def send_packet(packet, seq_no, conn):
+def send_packet(packet, seq_no, conn, config):
   try:
-    if (config.decision(config.plp)):
-      if (config.decision(config.pcp)):
-        conn.sendall(packet.encode(False))
+    if (decision(config.plp)):
+      if (decision(config.pcp)):
+        conn.sendall(packet.encode())
         print ('Sent #', seq_no)
       else:
         conn.sendall(packet.encode(True))
@@ -23,7 +22,7 @@ def send_packet(packet, seq_no, conn):
   except Exception as e :
     print(e)
     
-def sr_sw(conn, file, window_size):
+def sr_sw(conn, file, window_size, config):
   timeout = config.timeout
   window_base = 0
   packet_num = 0
@@ -32,13 +31,13 @@ def sr_sw(conn, file, window_size):
   ack_dict = {}
   while True:
     if packet_num >= window_base and packet_num < window_base + window_size:
-      piece = file.read(512)
+      piece = file.read(config.data_size)
       if piece == "".encode():
         if check_acks(ack_dict):
           break # end of file
       else:
         packet = Packet(piece, packet_num)
-        send_packet(packet, packet_num, conn)
+        send_packet(packet, packet_num, conn, config)
         packet_dict[packet_num] = packet
         ack_dict[packet_num] = False
         timer_dict[packet_num] = time.time() + timeout      
@@ -66,19 +65,20 @@ def sr_sw(conn, file, window_size):
     for seq_no, timestamp in timer_dict.items():
       if timestamp < time.time():
         print('Timeout #', seq_no)
-        send_packet(packet_dict[seq_no], seq_no, conn)
+        send_packet(packet_dict[seq_no], seq_no, conn, config)
         timer_dict[seq_no] = time.time() + timeout
 
+  print(conn)
   conn.close()
 
-def selective_repeat(conn, file):
-  sr_sw(conn, file, config.window_size)
+def selective_repeat(conn, file, config):
+  sr_sw(conn, file, config.window_size, config)
   
 
-def stop_and_wait(conn, file):
-  sr_sw(conn, file, 1)
+def stop_and_wait(conn, file, config):
+  sr_sw(conn, file, 1, config)
 
-def go_back_n(conn, file):
+def go_back_n(conn, file, config):
   timeout = config.timeout
   window_base = 0
   window_size = config.window_size
@@ -88,13 +88,13 @@ def go_back_n(conn, file):
   ack_dict = {}
   while True:
     if packet_num >= window_base and packet_num < window_base + window_size:
-      piece = file.read(512)
+      piece = file.read(config.data_size)
       if piece == "".encode():
         if check_acks(ack_dict):
           break # end of file
       else:
         packet = Packet(piece, packet_num)
-        send_packet(packet, packet_num, conn)
+        send_packet(packet, packet_num, conn, config)
         packet_dict[packet_num] = packet
         ack_dict[packet_num] = False
         timer_dict[packet_num] = time.time() + timeout      
@@ -120,11 +120,12 @@ def go_back_n(conn, file):
         while seq_no < window_base + window_size:
           try:
             print('Timeout #', seq_no)
-            send_packet(packet_dict[seq_no], seq_no, conn)
+            send_packet(packet_dict[seq_no], seq_no, conn, config)
             timer_dict[seq_no] = time.time() + timeout      
           except KeyError:
             pass
           seq_no += 1
         break
 
+  print(conn)
   conn.close()  
