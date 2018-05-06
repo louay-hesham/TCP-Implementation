@@ -15,6 +15,9 @@ files = [                  # files to be transfered
    'Coldplay - Hymn For The Weekend (Violin Cover by Robert Mendoza).mp3',
    'Careless Whisper - Vintage 1930s Jazz Wham! Cover ft. Dave Koz.mp4',
    'Alesso - Heroes (We Could Be) feat. Tove Lo (Official Audio-Lyrics Video).mp3',
+   '02 - Forsaken.mp3',
+   '04 The Unforgiven II.mp3',
+   'AWAKEN.mp3'
 ]
 
 data_size = 512 #Data size in packet (bytes)
