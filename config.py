@@ -19,7 +19,7 @@ files = [                  # files to be transfered
   # 'wp-image-142649597.jpg'
 ]
 
-data_size = 2048
+data_size = 512
 TCP_IP = 'localhost'
 TCP_PORT = 30000
 window_size = 10

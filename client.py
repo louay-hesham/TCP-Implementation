@@ -15,7 +15,7 @@ def start_client(config_str):    #  this function help initiate a new terminal w
     print(traceback.format_exc())
     input('')
 
-def client(config):
+def client(config, wait=True):
   import time 
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating client socket
@@ -109,5 +109,6 @@ def client(config):
   print('Time elapsed:', time)
   throughput = size / time   # calculating throughput
   print('Throughput =', throughput, 'bytes/second')
-  input('Press enter to close..')
+  if(wait):
+    input('Press enter to close..')
   return throughput

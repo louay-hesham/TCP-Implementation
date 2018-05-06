@@ -28,7 +28,7 @@ def get_avg_throughput():   # function to calculate average throughtput
   i = 5
   throughput = 0
   while i > 0:
-    throughput += client.client(config)
+    throughput += client.client(config, False)
     time.sleep(1)
     i -= 1
   throughput /= 5;
@@ -36,16 +36,18 @@ def get_avg_throughput():   # function to calculate average throughtput
   return throughput
 
 def generate_statistics():           # generate statistics of algorithms based of different parameters
-  probabilities = [0.01, 0.05, 0.1, 0.3]
+  probabilities = [0, 0.01, 0.05, 0.1, 0.3]
   window_sizes = [1, 10, 100, 500, 1000]
-  config.TCP_PORT = 50000
+  config.TCP_PORT = 30000
   print('Testing Stop-and-Wait algorithm')
   config.algorithm = 'S&W'
   stats['S&W'] = {}
   for p in probabilities:    
     config.plp = config.pcp = p
+    config.TCP_PORT += 50
     stats['S&W'][p] = get_avg_throughput()
 
+  config.TCP_PORT += 50
   print('Testing Selective-Repeat algorithm')
   config.algorithm = 'SR'
   stats['SR'] = {}
@@ -54,8 +56,10 @@ def generate_statistics():           # generate statistics of algorithms based o
     stats['SR'][ws] = {}
     for p in probabilities:    
       config.plp = config.pcp = p
+      config.TCP_PORT += 50
       stats['SR'][ws][p] = get_avg_throughput()
 
+  config.TCP_PORT += 50
   print('Testing Go-Back-N algorithm')
   config.algorithm = 'GBN'
   stats['GBN'] = {}
@@ -64,6 +68,7 @@ def generate_statistics():           # generate statistics of algorithms based o
     stats['GBN'][ws] = {}
     for p in probabilities:    
       config.plp = config.pcp = p
+      config.TCP_PORT += 50
       stats['GBN'][ws][p] = get_avg_throughput()
 
   print(stats['S&W'])
