@@ -1,20 +1,20 @@
 import json
+ # this config file is just a general file to handle various parameters used in all files
+algorithms = ['SR', 'GBN', 'S&W']  # our 3 types of algorithms
+algorithm = algorithms[0]          # selective repeat chosen in this run
 
-algorithms = ['SR', 'GBN', 'S&W']
-algorithm = algorithms[0]
-
-files = [ 
+files = [                  # files to be transfered
   '13. Push buttons.mp3',
-  # '_150_mewtwo__sfm__by_kensukenl-d8tcj4z.png',
-  # 'gadwal 1.png',
-  # 'gadwal 2.png',
-  # 'Legendary-Pokemon-Wallpaper.jpg',
-  # 'Mewtwo.jpg',
-  # 'mewtwo-wallpaper-1920x1080.jpg',
-  # 'new wallpaper.jpg',
-  # 'Screenshot from 2018-02-12 23-39-06.png',
-  # 'Screenshot from 2018-05-01 11-36-22.png',
-  # 'shark.jpg',
+   'السيف القاطع.mp3',
+   'Sad Romance (Violin Version)  - YouTube.flv',
+   'Running With The Wolves.mp3',
+   'pirates_of_the_caribbean_theme.mp3',
+   'Lay It On Me.mp3',
+   'Fullmetal Alchemist - Brotherhood OP 3 [720p] [English sub]_-gY4kmxphBU_youtube.mp3',
+   'Fullmetal Alchemist - Brotherhood OP 2 [720p] [English sub]_cpRV6jFIvqQ_youtube.mp3',
+   'Coldplay - Hymn For The Weekend (Violin Cover by Robert Mendoza).mp3',
+   'Careless Whisper - Vintage 1930s Jazz Wham! Cover ft. Dave Koz.mp4',
+   'Alesso - Heroes (We Could Be) feat. Tove Lo (Official Audio-Lyrics Video).mp3',
   # 'soso.png',
   # 'wp-image-142649597.jpg'
 ]
@@ -23,8 +23,8 @@ data_size = 2048
 TCP_IP = 'localhost'
 TCP_PORT = 30000
 window_size = 10
-plp = 0
-pcp = 0
+plp = 0    #packet loss percentage
+pcp = 0    # packet corruption percentage
 timeout = 0.1
 
 def to_str():

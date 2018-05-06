@@ -1,5 +1,5 @@
 import random
-
+# a file containing common functions
 def checksum(data):
   s = 0
   for i in range(len(data)):

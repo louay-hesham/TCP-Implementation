@@ -1,6 +1,6 @@
 class Packet:
 
-  def __init__(self, data, seq_no):
+  def __init__(self, data, seq_no):     # packet constrcutor
     self.data = data
     self.seq_no = seq_no
     self.length = len(data)
@@ -9,7 +9,7 @@ class Packet:
   def __str__(self):
     return 'Packet #' + str(self.seq_no)
 
-  def compute_checksum(self):
+  def compute_checksum(self):           # function checksum
     s = 0
     for i in range(len(self.data)):
       w = int.from_bytes(self.data[i:i + 2], 'big')
@@ -20,7 +20,7 @@ class Packet:
     s = ~s & 0xffff
     return s
   
-  def encode(self, corrupt=False):
+  def encode(self, corrupt=False):            # encode packet with specific byte length for each parameter
     length_encoded = self.int_to_bytes(self.length, 2)
     checksum_encoded = self.int_to_bytes(self.checksum, 2)
     seq_no_encoded = self.int_to_bytes(self.seq_no, 4)
@@ -31,13 +31,13 @@ class Packet:
     return n.to_bytes(size, 'big')
 
 
-class Ack_Packet:
+class Ack_Packet:          # class of acknowlege packet
 
-  def __init__(self, checksum, seq_no):
+  def __init__(self, checksum, seq_no):   # constructor
     self.checksum = checksum
     self.seq_no = seq_no
 
-  def encode(self):
+  def encode(self):   # encode  Acknolegment packet with specific byte length for each parameter(cheskum and sequence number)
     checksum_encoded = self.int_to_bytes(self.checksum, 2)
     seq_no_encoded = self.int_to_bytes(self.seq_no, 4)
     return  seq_no_encoded + checksum_encoded
