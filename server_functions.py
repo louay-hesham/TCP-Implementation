@@ -10,8 +10,8 @@ def check_acks(ack_dict):          # a method to check if the acknolegment is re
 
 def send_packet(packet, seq_no, conn, config):  # method to send packet
   try:
-    if (decision(config.plp)):            # decision to send or no based on package loss%
-      if (decision(config.pcp)):          # decidion to send it corrupted or no based on corruption%
+    if (decision(config.plp)):            # decision to send or not based on package loss probability
+      if (decision(config.pcp)):          # decidion to send it corrupted or not based on corruption probability
         conn.sendall(packet.encode())
         print ('Sent #', seq_no)
       else:

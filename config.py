@@ -15,19 +15,17 @@ files = [                  # files to be transfered
    'Coldplay - Hymn For The Weekend (Violin Cover by Robert Mendoza).mp3',
    'Careless Whisper - Vintage 1930s Jazz Wham! Cover ft. Dave Koz.mp4',
    'Alesso - Heroes (We Could Be) feat. Tove Lo (Official Audio-Lyrics Video).mp3',
-  # 'soso.png',
-  # 'wp-image-142649597.jpg'
 ]
 
-data_size = 512
+data_size = 512 #Data size in packet (bytes)
 TCP_IP = 'localhost'
 TCP_PORT = 30000
 window_size = 10
-plp = 0    #packet loss percentage
-pcp = 0    # packet corruption percentage
-timeout = 0.1
+plp = 0.01    # packet loss percentage
+pcp = 0.01    # packet corruption percentage
+timeout = 0.1 # Time till packet is deemed timeout if ack is not received
 
-def to_str():
+def to_str(): # Converts config file into a JSON string so it can be sent to different processes
   return json.dumps({
     'algorithm': algorithm,
     'files': files,

@@ -9,7 +9,7 @@ server_command = "import server, sys; server.start_server(sys.argv[1]);"
 client_command = "import client, sys; client.start_client(sys.argv[1]);"
 stats = {}
 
-def start_new_process(command_str):             # create new terminal for client process
+def start_new_process(command_str):             # create new terminal window
   msg = config.to_str()
   new_window_command = "x-terminal-emulator -e".split()
   echo = [sys.executable, "-c", command_str]
@@ -71,9 +71,9 @@ def generate_statistics():           # generate statistics of algorithms based o
       config.TCP_PORT += 50
       stats['GBN'][ws][p] = get_avg_throughput()
 
-  print(stats['S&W'])
-  print(stats['GBN'])
-  print(stats['SR'])
+  print('Stop and wait:', stats['S&W'])
+  print('Go-Back-N:', stats['GBN'])
+  print('Selective Repeat', stats['SR'])
   return stats
   
   
